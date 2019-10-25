@@ -29,7 +29,8 @@ connection.connect(function(err, response) {
             }
         ])
         // ****** IF STATEMENTS THAT RUN THE FUNCTION THAT THE USER CHOOSES ********
-        // 
+
+        // FIXME: all functions are running when user picks an option, need to add some validation to only run the function that the user selects
         .then(function(){
             if ("View Products for Sale") {
                 viewProductsForSale();
@@ -38,7 +39,29 @@ connection.connect(function(err, response) {
                 viewLowInventory();
             }
             if ("Add to Inventory") {
-                addToInventory();
+                inquirer.prompt([
+                    {
+                        type: "input",
+                        name: "product",
+                        message: "Product: "
+
+                    },
+                    {
+                        type: "input",
+                        name: "department",
+                        message: "Department: "
+                    },
+                    {
+                        type: "input",
+                        name: "price",
+                        message: "Price: "
+                    },
+                    {
+                        type: "input",
+                        name: "stock",
+                        message: "Stock: "
+                    }
+                ])
             }
             if ("Add New Product") {
                 addNewProduct();
