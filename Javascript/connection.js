@@ -26,25 +26,36 @@ connection.connect(function(err, response) {
                 name: "managerChoices",
                 message: "What would you like to do?",
                 choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
-            }
+            },
         ])
         // ****** IF STATEMENTS THAT RUN THE FUNCTION THAT THE USER CHOOSES ********
-
         // FIXME: all functions are running when user picks an option, need to add some validation to only run the function that the user selects
-        .then(function(){
-            if ("View Products for Sale") {
+        .then(function(user){
+            if (user.managerChoices === "View Products for Sale") {
                 viewProductsForSale();
             }
-            if ("View Low Inventory") {
+            if (user.managerChoices === "View Low Inventory") {
                 viewLowInventory();
             }
-            if ("Add to Inventory") {
+            if (user.managerChoices === "Add to Inventory") {
+                inquirer.prompt([
+                    {
+                        type: "list",
+                        name: "product list",
+                        message: "Which product would you like to add?"
+                    }
+                ])
+                addInventory();
+                displayNewInventory();
+
+            }
+            if (user.managerChoices === "Add New Product") {
                 inquirer.prompt([
                     {
                         type: "input",
                         name: "product",
                         message: "Product: "
-
+        
                     },
                     {
                         type: "input",
@@ -62,9 +73,8 @@ connection.connect(function(err, response) {
                         message: "Stock: "
                     }
                 ])
-            }
-            if ("Add New Product") {
                 addNewProduct();
+                displayNewInventory();
             }
         });
     }
@@ -79,6 +89,7 @@ var selectAllProducts = "SELECT * FROM bamazon.products";
 var selectLowInventory = "SELECT * FROM bamazon.products WHERE stock_quantity < 5";
 // TODO: store user inputs into this variable to add values to the SQL query
 var insertInto = "INSERT INTO bamazon.products" ;
+
 // FUNCTIONS
 // -------------------------------------------------------------------------------------------------
 // DISPLAYS ALL PRODUCTS
@@ -106,11 +117,16 @@ var viewLowInventory = () => {
 }
 
 // TODO: GIVES OPTION TO ADD STOCK TO A PRODUCT
-var addToInventory = () => {
+var addInventory = () => {
 
 }
 
 // TODO: GIVES OPTION TO ADD A NEW PRODUCT
 var addNewProduct = () => {
+
+}
+
+// TODO: DISPLAYS NEW INVENTORY AFTER USER ADDS A PRODUCT TO THE TABLE
+var displayNewInventory = () => {
 
 }
