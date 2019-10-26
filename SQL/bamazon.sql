@@ -1,7 +1,7 @@
 -- ####### Create bamazon DB #####
 -- CREATE DATABASE bamazon;
 
-####### Create a products table within the bamazon DB.########
+-- ####### Create a products table within the bamazon DB.########
 -- USE bamazon;
 -- CREATE TABLE products (
 -- 	item_id INTEGER auto_increment NOT NULL,
