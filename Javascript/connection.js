@@ -91,9 +91,42 @@ var viewLowInventory = () => {
     })
 }
 
-// TODO: FUNCTION THAT ALLOWS USER TO ADD INVENTORY TO A PRODUCT
+// FIXME: FUNCTION THAT ALLOWS USER TO ADD INVENTORY TO A PRODUCT
 var addToInventory = () => {
-    
+    console.log("----------------------------------------------")
+    var query = "SELECT product_name FROM bamazon.products";
+    connection.query(query, function(err, response){
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                name: "product_name",
+                type: "rawlist",
+                // FIXME: NEEDS TO BE THE CURRENT LIST OF PRODUCTS
+                choices: function() {
+                    var choiceArray = [];
+                    for (var i = 0; i < response.length; i++) {
+                      choiceArray.push(response[i]);
+                    }
+                    return choiceArray;
+                  },
+                message: "Which product would you like to add inventory to?"
+            },
+            {
+                name: "stock_quantity",
+                type: "input",
+                message: "How much inventory would you like to add?",
+                validate: function(value) {
+                    if (isNaN(value) === false) {
+                      return true;
+                      console.log("Must be a number")
+                    }
+                    return false;
+                  }
+            }
+        ]).then(function(answer){
+            // TODO:
+        })
+    })
 }
 
 // FUNCTION THAT ALLOWS USER TO ADD A WHOLE NEW PRODUCT TO THE DB
@@ -135,7 +168,6 @@ var addNewProduct = () => {
         }
     ]).then(function(answer) {
         var query = "INSERT INTO products SET ?";
-        // FIXME: GET ADDED PRODUCT TO DISPLAY IN CONSOLE
         connection.query(query, {
             product_name: answer.product_name,
             department_name: answer.department_name,

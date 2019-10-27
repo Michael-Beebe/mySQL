@@ -42,3 +42,5 @@
 
 -- INSERT INTO bamazon.products (product_name, department_name, price, stock_quantity)
 -- VALUES ("Nintendo Switch", "Video Games", 299.99, 15);
+
+-- UPDATE bamazon.products SET stock_quantity = ? WHERE ?
