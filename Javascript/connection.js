@@ -23,9 +23,8 @@ connection.connect(function(err, response) {
     }
 })
 // ===================================================================================================
-
+ 
 // INITIAL STARTUP FUNCTION THAT PROVIDES THE USER WITH OPTIONS. WHICH OPTION THE USER CHOOSES WILL DETERMINE WHICH FUNCTION IS TO BE RUN
-// FIXME: WHEN THIS FUNCTIONS RUN IT ERASES THE BOTTOM LINE IN THE OUTPUT OF THE PREVIOUSLY RUN FUNCTION
 var start = () => {
     console.log("\n----------------------------------------------")
     inquirer.prompt(
@@ -38,7 +37,6 @@ var start = () => {
                 "View Low Inventory", 
                 "Add to Inventory", 
                 "Add New Product",
-                "Exit"
             ]
         })
         .then(function(answer) {
@@ -59,10 +57,6 @@ var start = () => {
                     case "Add New Product":
                         addNewProduct();
                         break;
-
-                    case "Exit":
-                        exit();
-                        break;
                 }
         })
 }
@@ -73,34 +67,37 @@ var start = () => {
 
 // FUNCTION THAT DISPLAYS WHOLE TABLE
 var viewProductsForSale = () => {
-    var selectAllProducts = "SELECT * FROM bamazon.products";
-    connection.query(selectAllProducts, function(err, response) {
+    var query = "SELECT * FROM bamazon.products";
+    connection.query(query, function(err, response) {
         console.log("\nid | Product | Department | Price | Stock")
         console.log("-------------------------------------------")
         for (var i = 0; i < response.length; i++) {
             console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity)
         }
-        console.log("\n============================================\n");
+        start();
     })
-    start();
 }
 
 // FUNCTION THAT DISPLAYS INVENTORY WITH A QUANTITY LESS THAN 5
 var viewLowInventory = () => {
-    var selectLowInventory = "SELECT * FROM bamazon.products WHERE stock_quantity < 5"
-    connection.query(selectLowInventory, function(err, response) {
+    var query = "SELECT * FROM bamazon.products WHERE stock_quantity < 5";
+    connection.query(query, function(err, response) {
         console.log("\nid | Product | Department | Price | Stock" );
         console.log("-------------------------------------------")
         for (var i = 0; i < response.length; i++) {
             console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity)
         }
-        console.log("\n============================================\n");
+        start();
     })
-    start();
 }
 
 // TODO: FUNCTION THAT ALLOWS USER TO ADD INVENTORY TO A PRODUCT
 var addToInventory = () => {
+    
+}
+
+// FUNCTION THAT ALLOWS USER TO ADD A WHOLE NEW PRODUCT TO THE DB
+var addNewProduct = () => {
     inquirer.prompt([
         {
             name: "product_name",
@@ -115,16 +112,41 @@ var addToInventory = () => {
         {
             name: "price",
             type: "input",
-            message: "Price: "
+            message: "Price: ",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                  return true;
+                  console.log("Must be a number")
+                }
+                return false;
+              }
         },
         {
             name: "stock_quantity",
             type: "input",
-            message: "Stock Quantity: "
+            message: "Stock Quantity: ",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                  return true;
+                  console.log("Must be a number")
+                }
+                return false;
+              }
         }
-    ])
+    ]).then(function(answer) {
+        var query = "INSERT INTO products SET ?";
+        // FIXME: GET ADDED PRODUCT TO DISPLAY IN CONSOLE
+        connection.query(query, {
+            product_name: answer.product_name,
+            department_name: answer.department_name,
+            price: answer.price || 0,
+            stock_quantity: answer.stock_quantity || 0
+          },
+          function(err) {
+            if (err) throw err;
+            console.log("----------------------------------------------")
+            console.log("You added: " + answer.product_name);
+            start();
+          })
+        })
 }
-
-// TODO: FUNCTION THAT ALLOWS USER TO ADD A WHOLE NEW PROJECT TO THE DB
-
-// TODO: EXIT FUNCTION
