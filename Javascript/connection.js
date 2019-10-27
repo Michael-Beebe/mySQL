@@ -117,21 +117,33 @@ var addToInventory = () => {
                 validate: function(value) {
                     if (isNaN(value) === false) {
                       return true;
-                      console.log("Must be a number")
                     }
                     return false;
                   }
             }
         ]).then(function(answer){
-            // FIXME:
-            var query = "UPDATE bamazon.products SET stock_quantity = " + answer.stock_quantity + " WHERE " + answer.product_name + ";"
-            connection.query(query, function(err){
-                if (err) throw err;
-                console.log("----------------------------------------------")
-                console.log("Youd added " + answer.stock_quantity + " to " + answer.product_name + ".")
+                var chosenItem;
+                for (var i = 0; i < response.length; i++) {
+                if (response[i].product_name === answer.product_name) {
+                    chosenItem = response[i];
+                    }
+                }
+
+                var oldStock = chosenItem.stock_quantity;
+                var addedStock = parseInt(answer.stock_quantity);
+                var newStock = oldStock + addedStock;
+                console.log("New Stock: " + newStock);
+                var query = "UPDATE bamazon.products SET stock_quantity = " + newStock + " WHERE product_name = " + "'" + answer.product_name + "'" + ";";
+
+                connection.query(query, function(err){
+                    if (err) throw err;
+                    console.log("----------------------------------------------")
+                    console.log("You added " + answer.stock_quantity + " to " + answer.product_name + ".");
+                    console.log("New stock quantity for " + answer.product_name + ": " + newStock);
+                    start();
+                })
             })
         })
-    })
 }
 
 // FUNCTION THAT ALLOWS USER TO ADD A WHOLE NEW PRODUCT TO THE DB
