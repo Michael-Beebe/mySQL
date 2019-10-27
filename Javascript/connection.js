@@ -94,18 +94,17 @@ var viewLowInventory = () => {
 // FIXME: FUNCTION THAT ALLOWS USER TO ADD INVENTORY TO A PRODUCT
 var addToInventory = () => {
     console.log("----------------------------------------------")
-    var query = "SELECT product_name FROM bamazon.products";
+    var query = "SELECT * FROM bamazon.products";
     connection.query(query, function(err, response){
         if (err) throw err;
         inquirer.prompt([
             {
                 name: "product_name",
                 type: "rawlist",
-                // FIXME: NEEDS TO BE THE CURRENT LIST OF PRODUCTS
                 choices: function() {
                     var choiceArray = [];
                     for (var i = 0; i < response.length; i++) {
-                      choiceArray.push(response[i]);
+                      choiceArray.push(response[i].product_name);
                     }
                     return choiceArray;
                   },
@@ -124,7 +123,13 @@ var addToInventory = () => {
                   }
             }
         ]).then(function(answer){
-            // TODO:
+            // FIXME:
+            var query = "UPDATE bamazon.products SET stock_quantity = " + answer.stock_quantity + " WHERE " + answer.product_name + ";"
+            connection.query(query, function(err){
+                if (err) throw err;
+                console.log("----------------------------------------------")
+                console.log("Youd added " + answer.stock_quantity + " to " + answer.product_name + ".")
+            })
         })
     })
 }
