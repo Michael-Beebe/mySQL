@@ -37,6 +37,7 @@ var start = () => {
                 "View Low Inventory", 
                 "Add to Inventory", 
                 "Add New Product",
+                "Exit"
             ]
         })
         .then(function(answer) {
@@ -56,6 +57,10 @@ var start = () => {
                     
                     case "Add New Product":
                         addNewProduct();
+                        break;
+
+                    case "Exit":
+                        connection.end();
                         break;
                 }
         })
