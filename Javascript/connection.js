@@ -18,7 +18,7 @@ connection.connect(function(err, response) {
     }
     else {
         console.log("\nconnected as id " + connection.threadId);
-        console.log("============================================\n")
+        console.log("============================================")
         start();
     }
 })
