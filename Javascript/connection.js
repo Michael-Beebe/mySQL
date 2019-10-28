@@ -91,7 +91,7 @@ var viewLowInventory = () => {
     })
 }
 
-// FIXME: FUNCTION THAT ALLOWS USER TO ADD INVENTORY TO A PRODUCT
+// FUNCTION THAT ALLOWS USER TO ADD INVENTORY TO A PRODUCT
 var addToInventory = () => {
     console.log("----------------------------------------------")
     var query = "SELECT * FROM bamazon.products";
